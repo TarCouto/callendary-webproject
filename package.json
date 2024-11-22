@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth/core": "^0.37.4",
     "@hookform/resolvers": "^3.9.1",
     "@ignite-ui/react": "^2.2.4",
     "@radix-ui/react-label": "^2.1.0",
@@ -16,9 +17,11 @@
     "axios": "^1.7.7",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "cookie": "^1.0.2",
     "lucide-react": "^0.454.0",
     "next": "15.0.3",
-    "next-auth": "^4.24.10",
+    "next-auth": "5.0.0-beta.25",
+    "next-cookies": "^2.0.3",
     "nookies": "^2.5.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -30,6 +33,7 @@
   "devDependencies": {
     "@prisma/client": "^5.22.0",
     "@rocketseat/eslint-config": "^2.2.2",
+    "@types/cookies": "^0.9.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
@@ -39,5 +43,10 @@
     "prisma": "^5.22.0",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
+  },
+  "pnpm": {
+    "overrides": {
+      "@auth/core": "0.37.4"
+    }
   }
 }

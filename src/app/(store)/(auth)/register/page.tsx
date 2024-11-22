@@ -14,7 +14,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { api } from '@/lib/axios'
 
@@ -39,11 +39,15 @@ export default function RegisterPage() {
   const { setValue, handleSubmit, control } = form
 
   useEffect(() => {
-    const username = searchParams.get('username')
-    if (username) {
-      setValue('username', username)
+    if (searchParams) {
+      const username = searchParams.get('username')
+      if (username) {
+        setValue('username', username)
+      }
     }
   }, [searchParams, setValue])
+
+  const router = useRouter()
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values)
@@ -53,6 +57,7 @@ export default function RegisterPage() {
         name: values.fullName,
         username: values.username,
       })
+      await router.push('/register/connect-calendar')
     } catch (err) {
       console.log(err)
     }

@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import { setCookie } from 'nookies'
+import { NextResponse } from 'next/server'
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
@@ -44,59 +44,42 @@ export async function POST(req: Request) {
         JSON.stringify({ error: 'Username and name are required' }),
         {
           status: 400,
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
         },
       )
     }
 
-    // Verifique se o username já existe no banco de dados
-    const existingUser = await prisma.user.findUnique({
-      where: { username },
-    })
+    const existingUser = await prisma.user.findUnique({ where: { username } })
 
     if (existingUser) {
       return new Response(
         JSON.stringify({ error: 'Username already exists' }),
         {
           status: 409,
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
         },
       )
     }
 
-    // Cria o novo usuário
     const newUser = await prisma.user.create({
-      data: {
-        username,
-        name,
-      },
+      data: { username, name },
     })
 
-    // Configura o cookie com o ID do usuário criado
-    setCookie({ res: req }, 'userId', newUser.id, {
-      maxAge: 7 * 24 * 60 * 60, //
+    const response = NextResponse.json(newUser, { status: 201 })
+
+    response.cookies.set('userId', newUser.id, {
       path: '/',
+      maxAge: 7 * 24 * 60 * 60, // 7 dias
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
     })
 
-    return new Response(JSON.stringify(newUser), {
-      status: 201,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+    return response
   } catch (error) {
     console.error(error)
     return new Response(JSON.stringify({ error: 'Failed to create user' }), {
       status: 500,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
     })
   }
 }
