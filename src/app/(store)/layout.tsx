@@ -1,16 +1,17 @@
+import { Providers } from '@/components/providers'
 import { ReactNode } from 'react'
-// import { Header } from '@/components/header'
-// import { CartProvider } from '@/contexts/cart-contexts'
+// ajuste o caminho conforme necessário
+
 export default async function StoreLayout({
   children,
 }: {
   children: ReactNode
 }) {
   return (
-    // <CartProvider>
-    <div className="mx-auto grid  w-full max-w-[1600px] grid-rows-app gap-5 px-8 py-8 antialiased overflow-hidden">
-      {/* <Header /> */}
-      {children}
-    </div>
+    <Providers>
+      <div className="mx-auto grid w-full max-w-[1600px] grid-rows-app gap-5 px-8 py-8 antialiased overflow-hidden">
+        {children}
+      </div>
+    </Providers>
   )
 }

@@ -4,20 +4,16 @@ import {
   AdapterSession,
   AdapterAccount,
 } from '@auth/core/adapters'
-import { prisma } from '../prisma'
+import { PrismaClient } from '@prisma/client'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
-import { destroyCookie } from 'nookies'
-import { NextApiRequest, NextApiResponse } from 'next'
 
-export function PrismaAdapter(
-  req: NextApiRequest,
-  res: NextApiResponse,
-): Adapter {
+export function PrismaAdapter(prisma: PrismaClient): Adapter {
   return {
     async createUser(user: AdapterUser): Promise<AdapterUser> {
       const cookieStore = await cookies()
       const userId = cookieStore.get('userId')?.value
+      // const { userId } = parseCookies({ req })
 
       if (!userId) {
         throw new Error('Cookie "userId" não encontrado.')
@@ -37,10 +33,6 @@ export function PrismaAdapter(
           name: user.name ?? existingUser.name,
           email: user.email ?? existingUser.email,
         },
-      })
-
-      destroyCookie({ res }, 'userId', {
-        path: '/',
       })
 
       const response = NextResponse.next()

@@ -3,8 +3,10 @@
 import { useState } from 'react'
 import { handleGoogleSignIn } from '@/utils/authActions'
 import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
 export default function CalendarGoogle() {
+  const router = useRouter()
   const { data: session, status } = useSession()
   const [error, setError] = useState('')
 
@@ -19,6 +21,10 @@ export default function CalendarGoogle() {
     } catch {
       setError('Não foi possível conectar ao Google. Tente novamente.')
     }
+  }
+
+  function handleNextStep() {
+    router.push('time-intervals')
   }
 
   return (
@@ -41,6 +47,7 @@ export default function CalendarGoogle() {
       </div>
       {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
       <button
+        onClick={handleNextStep}
         disabled={status !== 'authenticated'} // Desabilita o botão se o usuário não estiver autenticado
         className={`bg-gray-600 w-full p-2 hover:bg-gray-700 text-white ${
           status !== 'authenticated' ? 'bg-gray-400 cursor-not-allowed' : ''
