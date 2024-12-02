@@ -1,7 +1,10 @@
+import { PrismaAdapter } from '@/lib/auth/prisma-adpter'
+import { prisma } from '@/lib/prisma'
 import NextAuth from 'next-auth'
 import Google from 'next-auth/providers/google'
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  adapter: PrismaAdapter(prisma),
   providers: [
     Google({
       authorization: {
@@ -22,9 +25,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
     // Inclui o campo `picture` na sessão
     async session({ session, token }) {
-      if (token) {
-        session.user.image = token.picture // Adiciona a imagem ao objeto `user`
-      }
+      // Apenas adiciona a imagem ao `session.user` sem sobrescrever outros dados
+      session.user.image = token.picture
       return session
     },
   },
