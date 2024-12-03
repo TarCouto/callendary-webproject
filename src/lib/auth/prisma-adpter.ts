@@ -32,7 +32,6 @@ export function PrismaAdapter(prisma: PrismaClient): Adapter {
         data: {
           name: user.name ?? existingUser.name,
           email: user.email ?? existingUser.email,
-          avatar_url: user.avatar_url,
         },
       })
 
